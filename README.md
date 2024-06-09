@@ -1,65 +1,37 @@
-# Chai Sutta API Explorer
+# Chai-Sutta Manager
+**Manage Your API Zen with Chai and Sutta!**
 
-This VS Code extension helps you find the perfect chai-sutta spots in your codebase. Because coding runs on chai and sutta!
+Welcome to the Chai-Sutta Manager, your ultimate companion for handling all your API calls in style! Because coding runs on chai (GET) and sutta (POST)!
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Explore and manage your API calls effortlessly with our extension. Need a break? Grab a chai (GET) or sutta (POST) and keep coding like a pro!
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Just bring your love for chai and sutta, and you're all set to manage your API calls like a boss!
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+This extension offers the following settings:
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+* `chaiSuttaManager.enable`: Enable/disable this extension.
+* `chaiSuttaManager.location`: Set your preferred chai-sutta spot for coding inspiration.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+No known issues. We're too busy enjoying our chai-sutta and managing API calls like a breeze!
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 2.5.1
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+Enhance your coding zen with the Chai-Sutta Manager!
 
 ---
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
-
 ## For more information
 
 * [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
 * [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 
-**Enjoy!**
+**Happy Coding with Chai-Sutta Management!**
