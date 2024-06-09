@@ -47,7 +47,7 @@ No known issues. We're too busy enjoying our chai-sutta and managing API calls l
 
 ## Release Notes
 
-### 2.5.1
+### 2.5.2
 
 Enhance your coding zen with the Chai-Sutta Manager!
 

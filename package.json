@@ -2,7 +2,7 @@
   "name": "chai-sutta-explorer",
   "displayName": "Chai Sutta API Explorer",
   "description": "This VS Code extension helps you find the perfect chai-sutta spots in your codebase. Because coding runs on chai and sutta!",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "publisher": "IshKapoor",
   "repository": "https://github.com/ishkapoor2000/chai-sutta-explorer/",
   "engines": {
