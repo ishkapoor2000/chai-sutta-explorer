@@ -1,6 +1,6 @@
-# chai-sutta-explorer README
+# Chai Sutta API Explorer
 
-This is the README for your extension "chai-sutta-explorer". After writing up a brief description, we recommend including the following sections.
+This VS Code extension helps you find the perfect chai-sutta spots in your codebase. Because coding runs on chai and sutta!
 
 ## Features
 
