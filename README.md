@@ -3,6 +3,29 @@
 
 Welcome to the Chai-Sutta Manager, your ultimate companion for handling all your API calls in style! Because coding runs on chai (GET) and sutta (POST)!
 
+## Currently Supports
+
+- JavaScript files (.js, .jsx, .ts, .tsx)
+- Fetch Requests (GET, POST)
+
+## Upcoming
+
+- Support for API calls in langauges
+  - Python
+  - Java
+  - Ruby
+  - PHP
+  - Go
+- More API call methods
+  - PUT (_Chai Latte_)
+  - DELETE (_Cold Coffee_)
+  - PATCH (_Weed_)
+  - UPDATE (_Green Tea_)
+- More API request frameworks
+  - Axios
+  - Requests
+  - XMLHttps
+
 ## Features
 
 Explore and manage your API calls effortlessly with our extension. Need a break? Grab a chai (GET) or sutta (POST) and keep coding like a pro!
