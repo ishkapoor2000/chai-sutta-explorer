@@ -153,14 +153,14 @@ function getWebviewContent(apiCalls = []) {
 		<ul>
 			${apiCalls.filter(call => call.method === 'GET').map(apiCall => {
 				const link = `command:chai-sutta-explorer.openFileAtLine?${encodeURIComponent(JSON.stringify({ file: apiCall.file, line: apiCall.line }))}`;
-				return `<li><a title="${apiCall.file}" href="${link}"><strong>${path.basename(apiCall.file)}:${apiCall.line}</strong></a> ${apiCall.call}</li>`;
+				return `<li><a title="${apiCall.file}" href="${link}">${path.basename(apiCall.file)}:${apiCall.line}</a> ${apiCall.call}</li>`;
 			}).join('')}
 		</ul>
 		<h2>Sutta - POST</h2>
 		<ul>
 			${apiCalls.filter(call => call.method === 'POST').map(apiCall => {
 				const link = `command:chai-sutta-explorer.openFileAtLine?${encodeURIComponent(JSON.stringify({ file: apiCall.file, line: apiCall.line }))}`;
-				return `<li><a title="${apiCall.file}" href="${link}"><strong>${path.basename(apiCall.file)}:${apiCall.line}</strong></a> ${apiCall.call}</li>`;
+				return `<li><a title="${apiCall.file}" href="${link}">${path.basename(apiCall.file)}:${apiCall.line}</a> ${apiCall.call}</li>`;
 			}).join('')}
 		</ul>
         <script>
