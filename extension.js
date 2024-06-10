@@ -32,14 +32,14 @@ function activate(context) {
 
 			try {
 				const apiCalls = findAPICalls(folderPath);
-				console.log('API Calls found:', apiCalls);
+				// console.log('API Calls found:', apiCalls);
 				panel.webview.html = getWebviewContent(apiCalls);
 			} catch (error) {
 				console.error('Error finding API calls:', error);
 				panel.webview.html = getWebviewContent();
 			}
 		} else {
-			console.log('No workspace folder found');
+			console.error('No workspace folder found');
 			panel.webview.html = getWebviewContent();
 		}
 
@@ -62,7 +62,7 @@ function activate(context) {
 }
 
 function findAPICalls(dir) {
-	console.log('Scanning directory:', dir);
+	console.info('Scanning directory:', dir);
 
 	let apiCalls = [];
 	const configuration = vscode.workspace.getConfiguration('chaiSuttaExplorer');
@@ -71,8 +71,8 @@ function findAPICalls(dir) {
 	const jsFiles = glob.sync(`${dir}/**/*.{js,jsx,ts,tsx}`, { ignore: ignorePatterns });
 	const pyFiles = glob.sync(`${dir}/**/*.py`, { ignore: ignorePatterns });
 
-	console.log('JavaScript/TypeScript files:', jsFiles);
-	console.log('Python files:', pyFiles);
+	console.info('JavaScript/TypeScript files:', jsFiles);
+	console.info('Python files:', pyFiles);
 
 	jsFiles.forEach(file => {
 		try {
@@ -176,7 +176,6 @@ function getWebviewContent(apiCalls = []) {
             methodCalls[method] = [];
         }
 		if(methodInfoConfig[method]) {
-			console.log("$$$$$$$$$$$$$$$$$$$$$", method, methodInfoConfig[method]);
 			methodCalls[method].push(call);
 		}
     });

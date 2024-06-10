@@ -47,11 +47,27 @@
 			}
 		},
 		"configurationMenus": {
-		  "command": "workbench.action.openSettings",
-		  "when": "editorTextFocus",
-		  "group": "chaiSuttaExplorer",
-		  "title": "Chai Sutta Explorer Configuration"
-		}
+			"command": "workbench.action.openSettings",
+			"when": "editorTextFocus",
+			"group": "chaiSuttaExplorer",
+			"title": "Chai Sutta Explorer Configuration"
+		},
+		"menus": {
+			"editor/context": [
+				{
+					"command": "chai-sutta-explorer.showChaiSuttaSpots",
+					"group": "navigation"
+				}
+			]
+		},
+		"keybindings": [
+            {
+                "command": "chai-sutta-explorer.showChaiSuttaSpots",
+                "key": "ctrl+shift+i",
+                "mac": "cmd+shift+i",
+                "when": "editorTextFocus"
+            }
+        ]
 	},
 	"scripts": {
 		"lint": "eslint .",
