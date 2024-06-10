@@ -10,25 +10,63 @@ Welcome to the Chai-Sutta Manager, your ultimate companion for handling all your
 
 ## Upcoming
 
-- Support for API calls in langauges
-  - Python
-  - Java
-  - Ruby
-  - PHP
-  - Go
-- More API call methods
-  - PUT (_Chai Latte_)
-  - DELETE (_Cold Coffee_)
-  - PATCH (_Weed_)
-  - UPDATE (_Green Tea_)
-- More API request frameworks
-  - Axios
-  - Requests
-  - XMLHttps
+Support for API calls in langauges
+- Python
+- Java
+- Ruby
+- PHP
+- Go
+
+More API call methods
+- PUT (_Chai Latte_)
+- DELETE (_Cold Coffee_)
+- PATCH (_Weed_)
+- UPDATE (_Green Tea_)
+
+More API request frameworks
+- Axios
+- Requests
+- XMLHttps
 
 ## Features
 
 Explore and manage your API calls effortlessly with our extension. Need a break? Grab a chai (GET) or sutta (POST) and keep coding like a pro!
+
+- Scans your project for API calls using `fetch` in JavaScript/TypeScript and `requests` in Python.
+- Displays the API calls in a dedicated webview panel.
+- Allows you to jump directly to the API call location in the source code.
+
+## Usage
+- Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P on macOS).
+- Type >`Show Chai Sutta Spots` and select it.
+- The Chai Sutta Explorer panel will display all found API calls, categorized by HTTP method.
+- Click on any API call link to navigate directly to the source code location.
+
+
+## Configuration
+
+You can customize the behavior of the Chai Sutta Explorer extension using the following settings:
+`chaiSuttaExplorer.ignorePatterns`
+
+Specifies glob patterns to ignore when searching for API calls. This setting helps exclude unnecessary files or directories from the scan.
+
+#### Default Value
+
+```json
+{
+  "chaiSuttaExplorer.ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/*.test.js",
+    "**/*.config.js"
+  ]
+}
+```
+How to Configure
+- Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P on macOS`).
+- Type Preferences: Open Settings (JSON) and select it.
+- Add or modify the `chaiSuttaExplorer.ignorePatterns` setting as desired. 
 
 ## Requirements
 
@@ -54,7 +92,7 @@ Enhance your coding zen with the Chai-Sutta Manager!
 ---
 ## For more information
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+* [Ask us a question](https://marketplace.visualstudio.com/items?itemName=IshKapoor.chai-sutta-explorer&ssr=false#review-details)
+* [Write a review](https://marketplace.visualstudio.com/items?itemName=IshKapoor.chai-sutta-explorer&ssr=false#review-details)
 
 **Happy Coding with Chai-Sutta Management!**

@@ -10,14 +10,14 @@ const walk = require('acorn-walk');
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-    console.log('Extension "API Calls Explorer" is now active!');
+    console.log('Extension "Chai Sutta Explorer" is now active!');
 
     let disposable = vscode.commands.registerCommand('api-calls-explorer.showAPICalls', function () {
         console.log('Command "api-calls-explorer.showAPICalls" executed');
 
         const panel = vscode.window.createWebviewPanel(
-            'apiCallsExplorer',
-            'API Calls Explorer',
+            'chaiSuttaExplorer',
+            'Chai Sutta Explorer',
             vscode.ViewColumn.One,
             {}
         );
@@ -132,7 +132,7 @@ function getWebviewContent(apiCalls = []) {
 
 // This method is called when your extension is deactivated
 function deactivate() {
-    console.log('Extension "API Calls Explorer" is now deactivated');
+    console.log('Extension "Chai Sutta Explorer" is now deactivated');
 }
 
 module.exports = {

@@ -1,43 +1,71 @@
 {
-  "name": "chai-sutta-explorer",
-  "displayName": "Chai Sutta API Explorer",
-  "description": "This VS Code extension helps you find the perfect chai-sutta spots in your codebase. Because coding runs on chai and sutta!",
-  "version": "2.5.2",
-  "publisher": "IshKapoor",
-  "repository": "https://github.com/ishkapoor2000/chai-sutta-explorer/",
-  "engines": {
-    "vscode": "^1.60.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [],
-  "main": "./extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "chai-sutta-explorer.showChaiSuttaSpots",
-        "title": "Show Sutta Spots"
-      }
-    ]
-  },
-  "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "vscode-test"
-  },
-  "devDependencies": {
-    "@types/node": "^14.14.37",
-    "@types/vscode": "^1.60.0",
-    "eslint": "^7.22.0",
-    "typescript": "^4.2.3",
-    "vscode-test": "^1.4.0"
-  },
-  "dependencies": {
-    "acorn": "^8.4.1",
-    "acorn-loose": "^8.4.0",
-    "acorn-walk": "^8.3.2",
-    "glob": "^7.1.6",
-    "vsce": "^1.97.0"
-  }
+	"name": "chai-sutta-explorer",
+	"displayName": "Chai Sutta API Explorer",
+	"description": "This VS Code extension helps you find the perfect chai-sutta spots in your codebase. Because coding runs on chai and sutta!",
+	"version": "2.5.2",
+	"publisher": "IshKapoor",
+	"repository": "https://github.com/ishkapoor2000/chai-sutta-explorer/",
+	"engines": {
+		"vscode": "^1.60.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [],
+	"main": "./extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "chai-sutta-explorer.showChaiSuttaSpots",
+				"title": "Show Sutta Spots"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Chai Sutta Explorer Configuration",
+			"properties": {
+				"chaiSuttaExplorer.ignorePatterns": {
+					"type": "array",
+					"default": [
+						"**/node_modules/**",
+						"**/config/**",
+						"**/Context/**",
+						"**/schemas/**",
+						"**/utils/**",
+						"**/dist/**",
+						"**/build/**",
+						"**/*.test.js",
+						"**/*next-env.d.ts",
+						"**/*.config.js"
+					],
+					"description": "Glob patterns to ignore when searching for API calls."
+				}
+			}
+		},
+		"configurationMenus": {
+		  "command": "workbench.action.openSettings",
+		  "when": "editorTextFocus",
+		  "group": "chaiSuttaExplorer",
+		  "title": "Chai Sutta Explorer Configuration"
+		}
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "vscode-test"
+	},
+	"devDependencies": {
+		"@types/node": "^14.14.37",
+		"@types/vscode": "^1.60.0",
+		"eslint": "^7.22.0",
+		"typescript": "^4.2.3",
+		"vscode-test": "^1.4.0"
+	},
+	"dependencies": {
+		"acorn": "^8.4.1",
+		"acorn-loose": "^8.4.0",
+		"acorn-walk": "^8.3.2",
+		"glob": "^7.1.6",
+		"vsce": "^1.97.0"
+	}
 }

@@ -10,14 +10,14 @@ const walk = require('acorn-walk');
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-    console.log('Extension "API Calls Explorer" is now active!');
+    console.log('Extension "Chai Sutta Explorer" is now active!');
 
     let disposable = vscode.commands.registerCommand('chai-sutta-explorer.showChaiSuttaSpots', function () {
         console.log('Command "chai-sutta-explorer.showChaiSuttaSpots" executed');
 
         const panel = vscode.window.createWebviewPanel(
-            'apiCallsExplorer',
-            'API Calls Explorer',
+            'chaiSuttaExplorer',
+            'Chai Sutta Explorer',
             vscode.ViewColumn.One,
             {
                 enableScripts: true // Enable scripts in the webview
@@ -64,18 +64,8 @@ function findAPICalls(dir) {
     console.log('Scanning directory:', dir);
 
     let apiCalls = [];
-    const ignorePatterns = [
-        '**/node_modules/**',
-        '**/config/**',
-        '**/Context/**',
-        '**/schemas/**',
-        '**/utils/**',
-        '**/dist/**',
-        '**/build/**',
-        '**/*.test.js',
-        '**/*next-env.d.ts',
-        '**/*.config.js'
-    ];
+    const configuration = vscode.workspace.getConfiguration('chaiSuttaExplorer');
+    const ignorePatterns = configuration.get('ignorePatterns');
 
     const jsFiles = glob.sync(`${dir}/**/*.{js,jsx,ts,tsx}`, { ignore: ignorePatterns });
     const pyFiles = glob.sync(`${dir}/**/*.py`, { ignore: ignorePatterns });
@@ -117,6 +107,25 @@ function findJsApiCalls(content, file) {
                     const methodNode = node.arguments[1] && node.arguments[1].properties.find(prop => prop.key.name === 'method');
                     const method = methodNode ? methodNode.value.value : 'GET';
                     apiCalls.push({ file, call: content.slice(node.start, node.end), line: node.loc.start.line, method });
+                } else if (node.callee.type === 'MemberExpression' && node.callee.object.name === 'axios') {
+                    const method = node.callee.property.name.toUpperCase();
+                    apiCalls.push({ file, call: content.slice(node.start, node.end), line: node.loc.start.line, method });
+                } else if (node.callee.type === 'Identifier' && node.callee.name === 'axios') {
+                    const methodNode = node.arguments[0] && node.arguments[0].properties.find(prop => prop.key.name === 'method');
+                    const method = methodNode ? methodNode.value.value.toUpperCase() : 'GET';
+                    apiCalls.push({ file, call: content.slice(node.start, node.end), line: node.loc.start.line, method });
+                }
+            },
+            NewExpression(node) {
+                if (node.callee.name === 'XMLHttpRequest') {
+                    walk.simple(node, {
+                        CallExpression(innerNode) {
+                            if (innerNode.callee.property && innerNode.callee.property.name === 'open') {
+                                const method = innerNode.arguments[0].value;
+                                apiCalls.push({ file, call: content.slice(innerNode.start, innerNode.end), line: innerNode.loc.start.line, method });
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -180,7 +189,7 @@ function getWebviewContent(apiCalls = []) {
 
 // This method is called when your extension is deactivated
 function deactivate() {
-    console.log('Extension "API Calls Explorer" is now deactivated');
+    console.log('Extension "Chai Sutta Explorer" is now deactivated');
 }
 
 module.exports = {
