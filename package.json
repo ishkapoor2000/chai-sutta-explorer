@@ -39,6 +39,10 @@
 						"**/*.config.js"
 					],
 					"description": "Glob patterns to ignore when searching for API calls."
+				},
+				"chaiSuttaExplorer.methodInfo": {
+					"type": "object",
+					"description": "Manage which API methods you want to use while searching for API calls. Customize crazy names of HTTP methods."
 				}
 			}
 		},

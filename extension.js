@@ -164,61 +164,47 @@ function findPyApiCalls(content, file) {
  * list of API calls. Each API call is displayed as a list item with the file name and the call itself.
  */
 function getWebviewContent(apiCalls = []) {
-	const methodInfo = {
-        'GET': {
-            name: 'Chai☕',
-            calls: []
-        },
-        'POST': {
-            name: 'Sutta🚬',
-            calls: []
-        },
-        'PUT': {
-            name: 'Chai Latte🍼',
-            calls: []
-        },
-        'DELETE': {
-            name: 'Cold Coffee🍵',
-            calls: []
-        },
-        'PATCH': {
-            name: 'Weed🚭',
-            calls: []
-        },
-        'UPDATE': {
-            name: 'Green Tea🥗',
-            calls: []
+    // Read user configuration
+    const configuration = vscode.workspace.getConfiguration('chaiSuttaExplorer');
+    const methodInfoConfig = configuration.get('methodInfo');
+
+    // Group API calls by method
+    const methodCalls = {};
+    apiCalls.forEach(call => {
+        const { method } = call;
+        if (!methodCalls[method]) {
+            methodCalls[method] = [];
         }
-    };
+		if(methodInfoConfig[method]) {
+			console.log("$$$$$$$$$$$$$$$$$$$$$", method, methodInfoConfig[method]);
+			methodCalls[method].push(call);
+		}
+    });
 
-	// Group API calls by method
-	apiCalls.forEach(apiCall => {
-		methodInfo[apiCall.method].calls.push(apiCall);
-	});
-
-	// Generate HTML content for each method section
-	let content = `
+    // Generate HTML content for each method section
+    let content = `
         <h1>Chai Sutta Spots</h1>
     `;
 
-	for (const method in methodInfo) {
-		const { name, calls } = methodInfo[method];
-		if (calls.length > 0) {
-
-			content += `
-                <h2>${name} - ${method}</h2>
+    for (const method in methodCalls) {
+        const calls = methodCalls[method];
+		console.log("###Current Methods###", method);
+        const methodName = methodInfoConfig[method]?.name;
+        if (calls.length > 0) {
+            content += `
+                <h2>${methodName} - ${method}</h2>
                 <ul>
-                    ${calls.map(apiCall => {
-				const link = `command:chai-sutta-explorer.openFileAtLine?${encodeURIComponent(JSON.stringify({ file: apiCall.file, line: apiCall.line }))}`;
-				return `<li><a title="${apiCall.file}" href="${link}">${path.basename(apiCall.file)}:${apiCall.line}</a> ${apiCall.call}</li>`;
-			}).join('')}
+                    ${calls.map(call => {
+                        const link = `command:chai-sutta-explorer.openFileAtLine?${encodeURIComponent(JSON.stringify({ file: call.file, line: call.line }))}`;
+                        return `<li><a title="${call.file}" href="${link}">${path.basename(call.file)}:${call.line}</a> ${call.call}</li>`;
+                    }).join('')}
                 </ul>
             `;
-		}
-	}
+        }
+    }
 
-	// Add script for VS Code communication
-	content += `
+    // Add script for VS Code communication
+    content += `
         <script>
             const vscode = acquireVsCodeApi();
             document.querySelectorAll('a').forEach(link => {
@@ -232,7 +218,7 @@ function getWebviewContent(apiCalls = []) {
         </script>
     `;
 
-	return content;
+    return content;
 }
 
 
