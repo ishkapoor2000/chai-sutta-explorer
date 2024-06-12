@@ -183,6 +183,10 @@ function getWebviewContent(apiCalls = []) {
     // Generate HTML content for each method section
     let content = `
         <h1>Chai Sutta Spots</h1>
+		<div id="loader" style="display: none;">
+            <p>Loading...</p>
+        </div>
+		<div id="content">
     `;
 
     for (const method in methodCalls) {
@@ -202,6 +206,8 @@ function getWebviewContent(apiCalls = []) {
         }
     }
 
+	content += `</div>`;
+
     // Add script for VS Code communication
     content += `
         <script>
@@ -214,6 +220,14 @@ function getWebviewContent(apiCalls = []) {
                     vscode.postMessage(data);
                 });
             });
+
+			document.getElementById('loader').style.display = 'block';
+            document.getElementById('content').style.display = 'none';
+
+            window.onload = () => {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+            };
         </script>
     `;
 

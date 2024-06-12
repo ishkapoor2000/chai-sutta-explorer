@@ -2,7 +2,7 @@
 	"name": "chai-sutta-explorer",
 	"displayName": "Chai Sutta API Explorer",
 	"description": "This VS Code extension helps you find the perfect chai-sutta spots in your codebase. Because coding runs on chai and sutta!",
-	"version": "2.6.5",
+	"version": "2.6.8",
 	"publisher": "IshKapoor",
 	"repository": "https://github.com/ishkapoor2000/chai-sutta-explorer/",
 	"engines": {
@@ -11,6 +11,7 @@
 	"categories": [
 		"Other"
 	],
+	"icon": "./media/logo.jpg",
 	"activationEvents": [],
 	"main": "./extension.js",
 	"contributes": {
@@ -42,6 +43,7 @@
 				},
 				"chaiSuttaExplorer.methodInfo": {
 					"type": "object",
+					"default": {},
 					"description": "Manage which API methods you want to use while searching for API calls. Customize crazy names of HTTP methods."
 				}
 			}

@@ -40,34 +40,7 @@ Explore and manage your API calls effortlessly with our extension. Need a break?
 - Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P on macOS).
 - Type >`Show Chai Sutta Spots` and select it.
 - The Chai Sutta Explorer panel will display all found API calls, categorized by HTTP method.
-- Click on any API call link to navigate directly to the source code location.
-
-
-## Configuration
-
-You can customize the behavior of the Chai Sutta Explorer extension using the following settings:
-`chaiSuttaExplorer.ignorePatterns`
-
-Specifies glob patterns to ignore when searching for API calls. This setting helps exclude unnecessary files or directories from the scan.
-
-#### Default Value
-
-```json
-{
-  "chaiSuttaExplorer.ignorePatterns": [
-    "**/node_modules/**",
-    "**/dist/**",
-    "**/build/**",
-    "**/*.test.js",
-    "**/*.config.js"
-  ]
-}
-```
-How to Configure
-- Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P on macOS`).
-- Type Preferences: Open Settings (JSON) and select it.
-- Add or modify the `chaiSuttaExplorer.ignorePatterns` setting as desired. 
-
+- Click on any API call link to navigate directly to the source code location. 
 
 ## Customizing Method Names
 
@@ -113,6 +86,33 @@ You can customize the display names for different HTTP methods via the `chaiSutt
     }
 }
 ```
+
+
+## Configuration - Ignore Files / Folder
+
+You can customize the behavior of the Chai Sutta Explorer extension using the following settings:
+`chaiSuttaExplorer.ignorePatterns`
+
+Specifies glob patterns to ignore when searching for API calls. This setting helps exclude unnecessary files or directories from the scan.
+
+#### Default Value
+
+```json
+{
+  "chaiSuttaExplorer.ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/*.test.js",
+    "**/*.config.js"
+  ]
+}
+```
+How to Configure
+- Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P on macOS`).
+- Type Preferences: Open Settings (JSON) and select it.
+- Add or modify the `chaiSuttaExplorer.ignorePatterns` setting as desired.
+
 
 ## Requirements
 
