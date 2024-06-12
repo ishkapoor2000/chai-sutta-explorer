@@ -18,7 +18,7 @@ Support for API calls in langauges
 - Go
 
 More API call methods
-- PUT (_Chai Latte_)
+[x] PUT (_Chai Latte_)
 - DELETE (_Cold Coffee_)
 - PATCH (_Weed_)
 - UPDATE (_Green Tea_)
@@ -68,6 +68,52 @@ How to Configure
 - Type Preferences: Open Settings (JSON) and select it.
 - Add or modify the `chaiSuttaExplorer.ignorePatterns` setting as desired. 
 
+
+## Customizing Method Names
+
+You can customize the display names for different HTTP methods via the `chaiSuttaExplorer.methodInfo` setting. This allows you to personalize the way API methods are represented in the extension.
+
+### How to Configure
+
+1. **Open Settings**:
+   - Go to File > Preferences > Settings (or press `Ctrl + ,`).
+   - Alternatively, open the Command Palette (`Ctrl + Shift + P`) and type "Preferences: Open Settings (UI)".
+
+2. **Search for Chai Sutta Explorer**:
+   - In the Settings search bar, type `chaiSuttaExplorer` to filter settings related to this extension.
+
+3. **Edit Method Info**:
+   - Find the `chaiSuttaExplorer.methodInfo` setting. This setting allows you to specify custom names for different HTTP methods.
+   - Click on `Edit in settings.json` to open your settings file in JSON format.
+
+4. **Add Your Custom Names**:
+   - Add your custom names for the methods in the JSON file. Here's an example configuration:
+
+```json
+{
+    "chaiSuttaExplorer.methodInfo": {
+        "GET": {
+            "name": "Chai☕"
+        },
+        "POST": {
+            "name": "Sutta🚬"
+        },
+        "PUT": {
+            "name": "Chai Latte🍼"
+        },
+        "DELETE": {
+            "name": "Cold Coffee🍵"
+        },
+        "PATCH": {
+            "name": "Weed🚭"
+        },
+        "UPDATE": {
+            "name": "Green Tea🥗"
+        }
+    }
+}
+```
+
 ## Requirements
 
 Just bring your love for chai and sutta, and you're all set to manage your API calls like a boss!
@@ -78,6 +124,12 @@ This extension offers the following settings:
 
 * `chaiSuttaManager.enable`: Enable/disable this extension.
 * `chaiSuttaManager.location`: Set your preferred chai-sutta spot for coding inspiration.
+
+## Using the Extension
+
+- **Open a Project**: Open a project folder that contains JavaScript, TypeScript, or Python files.
+- **Run the Command**: Open the Command Palette ```(Ctrl + Shift + P)``` and type *Chai Sutta Explorer: Show Chai Sutta Spots* to execute the command.
+- **View API Calls**: A new panel will open in the VS Code editor, displaying your API calls grouped by method with your custom names.
 
 ## Known Issues
 
