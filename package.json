@@ -30,19 +30,18 @@
 			}
 		],
 		"views": {
-			"chaiSuttaExplorerWebview": [{
-				"id": "chaiSuttaExplorer.webview",
-				"name": "Chai Sutta Explorer",
-				"webview": "panel",
-				"when": "explorerViewletVisible",
-				"visibility": "visible"
-			}],
-			"chaiSuttaExplorerTreeView": [{
-				"id": "chaiSuttaExplorer.treeView",
-				"name": "Chai Sutta Explorer Tree",
-				"when": "explorerViewletVisible && chaiSuttaExplorerTreeViewVisible",
-				"visibility": "visible"
-			}]
+			"chaiSuttaExplorer": [
+				{
+					"id": "chaiSuttaExplorerTreeView",
+					"name": "Chai Sutta Explorer Tree",
+					"visibility": "visible"
+				},
+				{
+					"id": "chaiSuttaExplorerWebview",
+					"name": "Chai Sutta Explorer Webview",
+					"visibility": "visible"
+				}
+			]
 		},
 		"viewsContainers": {
 			"activitybar": [
