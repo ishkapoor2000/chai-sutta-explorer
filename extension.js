@@ -3,9 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
 // @ts-ignore
+const { TreeItem, TreeItemCollapsibleState } = require('vscode');
 const acorn = require('acorn');
 const acornLoose = require('acorn-loose');
 const walk = require('acorn-walk');
+
+let chaiSuttaTreeDataProvider;
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -13,7 +16,21 @@ const walk = require('acorn-walk');
 function activate(context) {
 	console.log('Extension "Chai Sutta Explorer" is now active!');
 
-	let disposable = vscode.commands.registerCommand('chai-sutta-explorer.showChaiSuttaSpots', function () {
+	// Check if methodInfo is empty and show a notification
+	const configuration = vscode.workspace.getConfiguration('chaiSuttaExplorer');
+	const methodInfoConfig = configuration.get('methodInfo');
+	if (!methodInfoConfig || Object.keys(methodInfoConfig).length === 0) {
+		vscode.window.showWarningMessage(
+			'Chai Sutta Explorer: Methods are empty. Please configure methods in settings.',
+			'Open Settings'
+		).then(selection => {
+			if (selection === 'Open Settings') {
+				vscode.commands.executeCommand('workbench.action.openSettings', 'chaiSuttaExplorer.methodInfo');
+			}
+		});
+	}
+
+	let disposableWebview = vscode.commands.registerCommand('chai-sutta-explorer.showChaiSuttaSpots', function () {
 		console.log('Command "chai-sutta-explorer.showChaiSuttaSpots" executed');
 
 		const panel = vscode.window.createWebviewPanel(
@@ -58,7 +75,28 @@ function activate(context) {
 		);
 	});
 
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(disposableWebview);
+
+	// Register the tree view
+	chaiSuttaTreeDataProvider = new ChaiSuttaTreeDataProvider(context);
+	vscode.window.registerTreeDataProvider('chaiSuttaExplorerTreeView', chaiSuttaTreeDataProvider);
+
+	// Register the command to refresh the tree view
+	context.subscriptions.push(vscode.commands.registerCommand('chai-sutta-explorer.refreshTreeView', () => {
+		chaiSuttaTreeDataProvider.refresh();
+	}));
+
+	// Register the command to open a file at a specific line
+	context.subscriptions.push(vscode.commands.registerCommand('chai-sutta-explorer.openFileAtLine', async (file, line) => {
+		const fileUri = vscode.Uri.file(file);
+		const document = await vscode.workspace.openTextDocument(fileUri);
+		const editor = await vscode.window.showTextDocument(document);
+		const lineToGo = line - 1; // VS Code lines are 0-based
+
+		editor.selections = [new vscode.Selection(lineToGo, 0, lineToGo, 0)];
+		editor.revealRange(new vscode.Range(lineToGo, 0, lineToGo, 0), vscode.TextEditorRevealType.InCenter);
+	}));
+
 }
 
 function findAPICalls(dir) {
@@ -109,7 +147,7 @@ function findJsApiCalls(content, file) {
 					const methodNode = node.arguments[1] && node.arguments[1].properties.find(prop => prop.key.name === 'method');
 					const method = methodNode ? methodNode.value.value : 'GET';
 					apiCalls.push({ file, call: content.slice(node.start, node.end), line: node.loc.start.line, method });
-				// @ts-ignore
+					// @ts-ignore
 				} else if (node.callee.type === 'MemberExpression' && node.callee.object.name === 'axios') {
 					// @ts-ignore
 					const method = node.callee.property.name.toUpperCase();
@@ -164,24 +202,27 @@ function findPyApiCalls(content, file) {
  * list of API calls. Each API call is displayed as a list item with the file name and the call itself.
  */
 function getWebviewContent(apiCalls = []) {
-    // Read user configuration
-    const configuration = vscode.workspace.getConfiguration('chaiSuttaExplorer');
-    const methodInfoConfig = configuration.get('methodInfo');
+	// Read user configuration
+	const configuration = vscode.workspace.getConfiguration('chaiSuttaExplorer');
+	const methodInfoConfig = configuration.get('methodInfo');
 
-    // Group API calls by method
-    const methodCalls = {};
-    apiCalls.forEach(call => {
-        const { method } = call;
-        if (!methodCalls[method]) {
-            methodCalls[method] = [];
-        }
-		if(methodInfoConfig[method]) {
+	// Check if methodInfoConfig is empty
+	const isMethodInfoEmpty = !methodInfoConfig || Object.keys(methodInfoConfig).length === 0;
+
+	// Group API calls by method
+	const methodCalls = {};
+	apiCalls.forEach(call => {
+		const { method } = call;
+		if (!methodCalls[method]) {
+			methodCalls[method] = [];
+		}
+		if (methodInfoConfig[method]) {
 			methodCalls[method].push(call);
 		}
-    });
+	});
 
-    // Generate HTML content for each method section
-    let content = `
+	// Generate HTML content for each method section
+	let content = `
         <h1>Chai Sutta Spots</h1>
 		<div id="loader" style="display: none;">
             <p>Loading...</p>
@@ -189,27 +230,57 @@ function getWebviewContent(apiCalls = []) {
 		<div id="content">
     `;
 
-    for (const method in methodCalls) {
-        const calls = methodCalls[method];
-		console.log("###Current Methods###", method);
-        const methodName = methodInfoConfig[method]?.name;
-        if (calls.length > 0) {
-            content += `
+	for (const method in methodCalls) {
+		const calls = methodCalls[method];
+
+		const methodName = methodInfoConfig[method]?.name;
+		if (calls.length > 0) {
+			content += `
                 <h2>${methodName} - ${method}</h2>
                 <ul>
                     ${calls.map(call => {
-                        const link = `command:chai-sutta-explorer.openFileAtLine?${encodeURIComponent(JSON.stringify({ file: call.file, line: call.line }))}`;
-                        return `<li><a title="${call.file}" href="${link}">${path.basename(call.file)}:${call.line}</a> ${call.call}</li>`;
-                    }).join('')}
+				const link = `command:chai-sutta-explorer.openFileAtLine?${encodeURIComponent(JSON.stringify({ file: call.file, line: call.line }))}`;
+				return `<li><a title="${call.file}" href="${link}">${path.basename(call.file)}:${call.line}</a> ${call.call}</li>`;
+			}).join('')}
                 </ul>
             `;
-        }
-    }
+		}
+	}
+
+	// If there are no calls for any method, add a message and a link to settings
+	console.log("apiCalls", apiCalls)
+	if (
+		apiCalls.length === 0 ||
+		isMethodInfoEmpty) {
+		content += `
+			<h2>No API calls found.</h2>
+			<p>Please configure Methods in the extension settings</p>
+			<p>Use the following json as sample and place it in Mothod Info settings. Then execute the command again.</p>
+			<code style="white-space: pre-wrap;" onclick="alert('copy')">"GET": {
+	"name": "Chai☕"
+},
+"POST": {
+	"name": "Sutta🚬"
+},
+"PUT": {
+	"name": "Chai Latte🍼"
+},
+"DELETE": {
+	"name": "Cold Coffee🍵"
+},
+"PATCH": {
+	"name": "Weed🚭"
+},
+"UPDATE": {
+	"name": "Green Tea🥗"
+}</code>
+		`;
+	}
 
 	content += `</div>`;
 
-    // Add script for VS Code communication
-    content += `
+	// Add script for VS Code communication
+	content += `
         <script>
             const vscode = acquireVsCodeApi();
             document.querySelectorAll('a').forEach(link => {
@@ -231,9 +302,64 @@ function getWebviewContent(apiCalls = []) {
         </script>
     `;
 
-    return content;
+	return content;
 }
 
+/**
+ * Tree view data provider for Chai Sutta Explorer extension.
+ */
+class ChaiSuttaTreeDataProvider {
+	constructor(context) {
+		this._context = context;
+		this._onDidChangeTreeData = new vscode.EventEmitter();
+		this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+	}
+
+	refresh() {
+		this._onDidChangeTreeData.fire();
+	}
+
+	getTreeItem(element) {
+		return element;
+	}
+
+	getChildren(element) {
+		const workspaceFolders = vscode.workspace.workspaceFolders;
+		if (!workspaceFolders) {
+			return Promise.resolve([]);
+		}
+
+		const rootPath = workspaceFolders[0].uri.fsPath;
+		const apiCalls = findAPICalls(rootPath);
+		const methodInfoConfig = vscode.workspace.getConfiguration('chaiSuttaExplorer').get('methodInfo');
+
+		const methodCalls = {};
+		apiCalls.forEach(call => {
+			const { method } = call;
+			if (!methodCalls[method]) {
+				methodCalls[method] = [];
+			}
+			if (methodInfoConfig[method]) {
+				methodCalls[method].push(call);
+			}
+		});
+
+		const items = [];
+		for (const method in methodCalls) {
+			const calls = methodCalls[method];
+			const methodName = methodInfoConfig[method]?.name || method;
+			const methodTreeItem = new TreeItem(`${methodName} (${calls.length})`, TreeItemCollapsibleState.Collapsed);
+			methodTreeItem.command = {
+				command: 'chai-sutta-explorer.openFileAtLine',
+				title: 'Open file',
+				arguments: [calls[0].file, calls[0].line]
+			};
+			items.push(methodTreeItem);
+		}
+
+		return Promise.resolve(items);
+	}
+}
 
 // This method is called when your extension is deactivated
 function deactivate() {

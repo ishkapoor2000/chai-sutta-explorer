@@ -11,7 +11,7 @@
 	"categories": [
 		"Other"
 	],
-	"icon": "./media/logo.jpg",
+	"icon": "media/logo.jpg",
 	"activationEvents": [],
 	"main": "./extension.js",
 	"contributes": {
@@ -19,8 +19,40 @@
 			{
 				"command": "chai-sutta-explorer.showChaiSuttaSpots",
 				"title": "Show Sutta Spots"
+			},
+			{
+				"command": "chai-sutta-explorer.refreshTreeView",
+				"title": "One more chuski of Chai Sutta"
+			},
+			{
+				"command": "chai-sutta-explorer.openFileAtLine",
+				"title": "Open File at Line"
 			}
 		],
+		"views": {
+			"chaiSuttaExplorerWebview": [{
+				"id": "chaiSuttaExplorer.webview",
+				"name": "Chai Sutta Explorer",
+				"webview": "panel",
+				"when": "explorerViewletVisible",
+				"visibility": "visible"
+			}],
+			"chaiSuttaExplorerTreeView": [{
+				"id": "chaiSuttaExplorer.treeView",
+				"name": "Chai Sutta Explorer Tree",
+				"when": "explorerViewletVisible && chaiSuttaExplorerTreeViewVisible",
+				"visibility": "visible"
+			}]
+		},
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "chaiSuttaExplorer",
+					"title": "Chai Sutta Explorer",
+					"icon": "media/logo.jpg"
+				}
+			]
+		},
 		"configuration": {
 			"type": "object",
 			"title": "Chai Sutta Explorer Configuration",
@@ -63,13 +95,13 @@
 			]
 		},
 		"keybindings": [
-            {
-                "command": "chai-sutta-explorer.showChaiSuttaSpots",
-                "key": "ctrl+shift+i",
-                "mac": "cmd+shift+i",
-                "when": "editorTextFocus"
-            }
-        ]
+			{
+				"command": "chai-sutta-explorer.showChaiSuttaSpots",
+				"key": "ctrl+shift+i",
+				"mac": "cmd+shift+i",
+				"when": "editorTextFocus"
+			}
+		]
 	},
 	"scripts": {
 		"lint": "eslint .",
