@@ -45,11 +45,9 @@ function activate(context) {
 		const workspaceFolders = vscode.workspace.workspaceFolders;
 		if (workspaceFolders && workspaceFolders.length > 0) {
 			const folderPath = workspaceFolders[0].uri.fsPath;
-			console.log('Workspace folder path:', folderPath);
 
 			try {
 				const apiCalls = findAPICalls(folderPath);
-				// console.log('API Calls found:', apiCalls);
 				panel.webview.html = getWebviewContent(apiCalls);
 			} catch (error) {
 				console.error('Error finding API calls:', error);
@@ -100,7 +98,6 @@ function activate(context) {
 }
 
 function findAPICalls(dir) {
-	console.info('Scanning directory:', dir);
 
 	let apiCalls = [];
 	const configuration = vscode.workspace.getConfiguration('chaiSuttaExplorer');
@@ -108,9 +105,6 @@ function findAPICalls(dir) {
 
 	const jsFiles = glob.sync(`${dir}/**/*.{js,jsx,ts,tsx}`, { ignore: ignorePatterns });
 	const pyFiles = glob.sync(`${dir}/**/*.py`, { ignore: ignorePatterns });
-
-	console.info('JavaScript/TypeScript files:', jsFiles);
-	console.info('Python files:', pyFiles);
 
 	jsFiles.forEach(file => {
 		try {
@@ -248,7 +242,6 @@ function getWebviewContent(apiCalls = []) {
 	}
 
 	// If there are no calls for any method, add a message and a link to settings
-	console.log("apiCalls", apiCalls)
 	if (
 		apiCalls.length === 0 ||
 		isMethodInfoEmpty) {
@@ -324,42 +317,59 @@ class ChaiSuttaTreeDataProvider {
 	}
 
 	getChildren(element) {
-		const workspaceFolders = vscode.workspace.workspaceFolders;
-		if (!workspaceFolders) {
-			return Promise.resolve([]);
-		}
-
-		const rootPath = workspaceFolders[0].uri.fsPath;
-		const apiCalls = findAPICalls(rootPath);
-		const methodInfoConfig = vscode.workspace.getConfiguration('chaiSuttaExplorer').get('methodInfo');
-
-		const methodCalls = {};
-		apiCalls.forEach(call => {
-			const { method } = call;
-			if (!methodCalls[method]) {
-				methodCalls[method] = [];
+		if (element) {
+			// If we are at a method level, return the API calls for that method
+			return Promise.resolve(element.apiCalls.map(call => {
+				const item = new TreeItem(`${path.basename(call.file)}:${call.line} ${call.call}`, TreeItemCollapsibleState.None);
+				item.command = {
+					command: 'chai-sutta-explorer.openFileAtLine',
+					title: 'Open file',
+					arguments: [call.file, call.line]
+				};
+				return item;
+			}));
+		} else {
+			// If we are at the root level, return the methods
+			const workspaceFolders = vscode.workspace.workspaceFolders;
+			if (!workspaceFolders) {
+				return Promise.resolve([]);
 			}
-			if (methodInfoConfig[method]) {
-				methodCalls[method].push(call);
+
+			const rootPath = workspaceFolders[0].uri.fsPath;
+			const apiCalls = findAPICalls(rootPath);
+			const methodInfoConfig = vscode.workspace.getConfiguration('chaiSuttaExplorer').get('methodInfo');
+
+			const methodCalls = {};
+			apiCalls.forEach(call => {
+				const { method } = call;
+				if (!methodCalls[method]) {
+					methodCalls[method] = [];
+				}
+				if (methodInfoConfig[method]) {
+					methodCalls[method].push(call);
+				}
+			});
+
+			const items = [];
+			for (const method in methodCalls) {
+				const calls = methodCalls[method];
+				const methodName = methodInfoConfig[method]?.name || method;
+				const methodTreeItem = new MethodTreeItem(`${methodName} (${calls.length})`, vscode.TreeItemCollapsibleState.Collapsed, calls);
+				items.push(methodTreeItem);
 			}
-		});
 
-		const items = [];
-		for (const method in methodCalls) {
-			const calls = methodCalls[method];
-			const methodName = methodInfoConfig[method]?.name || method;
-			const methodTreeItem = new TreeItem(`${methodName} (${calls.length})`, TreeItemCollapsibleState.Collapsed);
-			methodTreeItem.command = {
-				command: 'chai-sutta-explorer.openFileAtLine',
-				title: 'Open file',
-				arguments: [calls[0].file, calls[0].line]
-			};
-			items.push(methodTreeItem);
+			return Promise.resolve(items);
 		}
-
-		return Promise.resolve(items);
 	}
 }
+
+class MethodTreeItem extends vscode.TreeItem {
+	constructor(label, collapsibleState, apiCalls = []) {
+		super(label, collapsibleState);
+		this.apiCalls = apiCalls;
+	}
+}
+
 
 // This method is called when your extension is deactivated
 function deactivate() {
