@@ -2,7 +2,7 @@
 	"name": "chai-sutta-explorer",
 	"displayName": "Chai Sutta API Explorer",
 	"description": "This VS Code extension helps you find the perfect chai-sutta spots in your codebase. Because coding runs on chai and sutta!",
-	"version": "2.6.8",
+	"version": "2.8.12",
 	"publisher": "IshKapoor",
 	"repository": "https://github.com/ishkapoor2000/chai-sutta-explorer/",
 	"engines": {
@@ -27,18 +27,17 @@
 			{
 				"command": "chai-sutta-explorer.openFileAtLine",
 				"title": "Open File at Line"
-			}
+			},
+			{
+                "command": "chai-sutta-explorer.filterTreeView",
+                "title": "Filter API Calls"
+            }
 		],
 		"views": {
 			"chaiSuttaExplorer": [
 				{
 					"id": "chaiSuttaExplorerTreeView",
 					"name": "Chai Sutta Explorer Tree",
-					"visibility": "visible"
-				},
-				{
-					"id": "chaiSuttaExplorerWebview",
-					"name": "Chai Sutta Explorer Webview",
 					"visibility": "visible"
 				}
 			]
@@ -48,7 +47,7 @@
 				{
 					"id": "chaiSuttaExplorer",
 					"title": "Chai Sutta Explorer",
-					"icon": "media/logo.jpg"
+					"icon": "media/logo_tea.png"
 				}
 			]
 		},
@@ -90,6 +89,12 @@
 				{
 					"command": "chai-sutta-explorer.showChaiSuttaSpots",
 					"group": "navigation"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "chai-sutta-explorer.filterTreeView",
+					"when": "view == chaiSuttaExplorerTreeView"
 				}
 			]
 		},

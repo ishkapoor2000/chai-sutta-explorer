@@ -75,6 +75,14 @@ function activate(context) {
 
 	context.subscriptions.push(disposableWebview);
 
+	context.subscriptions.push(vscode.commands.registerCommand('chai-sutta-explorer.filterTreeView', async () => {
+		const filter = await vscode.window.showInputBox({
+			placeHolder: 'Type to filter API calls by method name'
+		});
+		chaiSuttaTreeDataProvider.setFilter(filter);
+		chaiSuttaTreeDataProvider.refresh();
+	}));
+
 	// Register the tree view
 	chaiSuttaTreeDataProvider = new ChaiSuttaTreeDataProvider(context);
 	vscode.window.registerTreeDataProvider('chaiSuttaExplorerTreeView', chaiSuttaTreeDataProvider);
@@ -306,9 +314,14 @@ class ChaiSuttaTreeDataProvider {
 		this._context = context;
 		this._onDidChangeTreeData = new vscode.EventEmitter();
 		this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+		this.filter = '';
 	}
 
-	refresh() {
+	setFilter(filter) {
+        this.filter = filter;
+    }
+
+    refresh() {
 		this._onDidChangeTreeData.fire();
 	}
 
@@ -320,7 +333,7 @@ class ChaiSuttaTreeDataProvider {
 		if (element) {
 			// If we are at a method level, return the API calls for that method
 			return Promise.resolve(element.apiCalls.map(call => {
-				const item = new TreeItem(`${path.basename(call.file)}:${call.line} ${call.call}`, TreeItemCollapsibleState.None);
+				const item = new TreeItem(`⚡${path.basename(call.file)}:${call.line} ${call.call}`, TreeItemCollapsibleState.None);
 				item.command = {
 					command: 'chai-sutta-explorer.openFileAtLine',
 					title: 'Open file',
@@ -352,7 +365,11 @@ class ChaiSuttaTreeDataProvider {
 
 			const items = [];
 			for (const method in methodCalls) {
-				const calls = methodCalls[method];
+				if (this.filter && !method.toLowerCase().includes(this.filter.toLowerCase())) {
+                    continue;
+                }
+
+                const calls = methodCalls[method];
 				const methodName = methodInfoConfig[method]?.name || method;
 				const methodTreeItem = new MethodTreeItem(`${methodName} (${calls.length})`, vscode.TreeItemCollapsibleState.Collapsed, calls);
 				items.push(methodTreeItem);
@@ -380,3 +397,4 @@ module.exports = {
 	activate,
 	deactivate
 }
+		
